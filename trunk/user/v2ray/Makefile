@@ -4,7 +4,7 @@ V2RAY_DIR = "v2ray-core/core/main"
 
 THISDIR = $(shell pwd)
 
-all: download build_extract build
+all: download build_extract
 
 download:
 	( if [ ! -f $(THISDIR)/v2ray-core-$(V2RAY_VERSION).tar.gz ]; then \
