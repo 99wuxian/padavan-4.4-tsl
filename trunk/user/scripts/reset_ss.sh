@@ -60,6 +60,9 @@ echo 1        > /proc/sys/kernel/panic
 echo 1        > /proc/sys/kernel/panic_on_oops
 echo 0        > /proc/sys/vm/panic_on_oom
 
+# zram swap
+[ -b /dev/zram0 ] && (echo 16M > /sys/block/zram0/disksize ; echo lz4 > /sys/block/zram0/comp_algorithm ; mkswap /dev/zram0 ; swapon /dev/zram0)
+
 EOF
 chmod 755 "$script_start"
 
