@@ -309,6 +309,9 @@ EOF
 
 #wing resume
 
+iptables  -t mangle -A FORWARD -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
+ip6tables -t mangle -A FORWARD -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
+
 EOF
 		chmod 755 "$script_postf"
 	fi
