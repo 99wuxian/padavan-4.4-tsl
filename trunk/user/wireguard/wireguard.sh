@@ -20,6 +20,7 @@ start_wg() {
 
 
 stop_wg() {
+	iptables -t nat -D POSTROUTING -o wg0 -j MASQUERADE
 	ifconfig wg0 down
 	ip link del dev wg0
 	logger -t "WIREGUARD" "正在关闭wireguard"
