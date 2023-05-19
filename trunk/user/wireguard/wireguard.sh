@@ -11,10 +11,10 @@ start_wg() {
 	ifconfig wg0 down
 	ip link del dev wg0
 	if [ -f "$CONFIG_FILE" ]; then
-	sed -i -E "s/^[ \t]*Address[ \t]*=.*$/Address = $localip/ig" $CONFIG_FILE
-	sed -i -E "s/^[ \t]*PrivateKey[ \t]*=.*$/PrivateKey = $privatekey/ig" $CONFIG_FILE
-	sed -i -E "s/^[ \t]*PublicKey[ \t]*=.*$/PublicKey = $peerkey/ig" $CONFIG_FILE
-	sed -i -E "s/^[ \t]*Endpoint*[ \t]*=.*$/Endpoint = $peerip/ig" $CONFIG_FILE
+	sed -i -E "s|^[ \t]*Address[ \t]*=.*$|Address = $localip|ig" $CONFIG_FILE
+	sed -i -E "s|^[ \t]*PrivateKey[ \t]*=.*$|PrivateKey = $privatekey|ig" $CONFIG_FILE
+	sed -i -E "s|^[ \t]*PublicKey[ \t]*=.*$|PublicKey = $peerkey|ig" $CONFIG_FILE
+	sed -i -E "s|^[ \t]*Endpoint[ \t]*=.*$|Endpoint = $peerip|ig" $CONFIG_FILE
 	wg-quick up $CONFIG_FILE
 	else
 	ip link add dev wg0 type wireguard
