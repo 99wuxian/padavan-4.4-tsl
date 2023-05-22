@@ -2185,6 +2185,9 @@ static int shadowsocks_status_hook(int eid, webs_t wp, int argc, char **argv)
 	if (ss_status_code == 0){
 		ss_status_code = pids("ipt2socks");
 	}
+	if (ss_status_code == 0){
+		ss_status_code = pids("socks5-tproxy");
+	}
 	websWrite(wp, "function shadowsocks_status() { return %d;}\n", ss_status_code);
 	int ss_tunnel_status_code = pids("ss-local");
 	websWrite(wp, "function shadowsocks_tunnel_status() { return %d;}\n", ss_tunnel_status_code);
