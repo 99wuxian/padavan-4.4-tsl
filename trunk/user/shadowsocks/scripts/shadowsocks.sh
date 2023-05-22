@@ -270,10 +270,34 @@ start_redir_tcp() {
 		log "$($bin -version | head -1) 启动成功!"
 		;;	
 	socks5)
+		if [ -x /etc/storage/socks5-tproxy ]; then
+		lua /etc_ro/ss/getport.lua $GLOBAL_SERVER > /tmp/server_port.txt
+		server_port=`cat /tmp/server_port.txt`
+		cat > /tmp/socks5-tproxy-config.yml <<EOF
+socks5:
+  port: $server_port
+  address: $server
+  udp: 'tcp'
+
+tcp:
+  port: $local_port
+  address: '::'
+EOF
+		if [ "$UDP_RELAY_SERVER" == "$GLOBAL_SERVER" ]; then
+		cat >> /tmp/socks5-tproxy-config.yml <<EOF
+
+udp:
+  port: $udp_local_port
+  address: '::'
+EOF
+		fi
+		/etc/storage/socks5-tproxy /tmp/socks5-tproxy-config.yml
+		else
 		for i in $(seq 1 $threads); do
 			run_bin lua /etc_ro/ss/gensocks.lua $GLOBAL_SERVER 1080
 			usleep 500000
 		done
+		fi
 	    ;;
 	esac
 	return 0
@@ -308,7 +332,25 @@ start_redir_udp() {
 			run_bin ipt2socks -U -b 0.0.0.0 -4 -s 127.0.0.1 -p 10801 -l 1080
 			;;
 		socks5)
+			if [ -x /etc/storage/socks5-tproxy ]; then
+			if [ "$UDP_RELAY_SERVER" != "$GLOBAL_SERVER" ]; then
+			lua /etc_ro/ss/getport.lua $UDP_RELAY_SERVER > /tmp/userver_port.txt
+			udp_server_port=`cat /tmp/userver_port.txt`
+			cat > /tmp/socks5-tproxy-uconfig.yml <<EOF
+socks5:
+  port: $udp_server_port
+  address: $udp_server
+  udp: 'tcp'
+
+udp:
+  port: $udp_local_port
+  address: '::'
+EOF
+			/etc/storage/socks5-tproxy /tmp/socks5-tproxy-uconfig.yml
+			fi
+			else
 			echo "1"
+			fi
 		    ;;
 		esac
 	fi
