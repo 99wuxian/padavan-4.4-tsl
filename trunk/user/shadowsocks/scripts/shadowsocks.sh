@@ -152,7 +152,8 @@ get_arg_out() {
 start_rules() {
     log "正在添加防火墙规则..."
 	lua /etc_ro/ss/getconfig.lua $GLOBAL_SERVER > /tmp/server.txt
-	server=`cat /tmp/server.txt` 
+	server=`cat /tmp/server.txt`
+	rm /tmp/server.txt
 	cat /etc/storage/ss_ip.sh | grep -v '^!' | grep -v "^$" >$wan_fw_ips
 	cat /etc/storage/ss_wan_ip.sh | grep -v '^!' | grep -v "^$" >$wan_bp_ips
 	#resolve name
@@ -176,7 +177,8 @@ start_rules() {
 	if [ "$UDP_RELAY_SERVER" != "nil" ]; then
 		ARG_UDP="-U"
 		lua /etc_ro/ss/getconfig.lua $UDP_RELAY_SERVER > /tmp/userver.txt
-	    udp_server=`cat /tmp/userver.txt` 
+		udp_server=`cat /tmp/userver.txt`
+		rm /tmp/userver.txt
 		udp_local_port="1080"
 	fi
 	if [ -n "$lan_ac_ips" ]; then
@@ -273,11 +275,15 @@ start_redir_tcp() {
 		if [ -x /etc/storage/socks5-tproxy ]; then
 		lua /etc_ro/ss/getport.lua $GLOBAL_SERVER > /tmp/server_port.txt
 		server_port=`cat /tmp/server_port.txt`
+		rm /tmp/server_port.txt
 		cat > /tmp/socks5-tproxy-config.yml <<EOF
 socks5:
   port: $server_port
   address: $server
   udp: 'tcp'
+
+misc:
+  pid-file: /var/run/socks5-tproxy.pid
 
 tcp:
   port: $local_port
@@ -336,11 +342,15 @@ start_redir_udp() {
 			if [ "$UDP_RELAY_SERVER" != "$GLOBAL_SERVER" ]; then
 			lua /etc_ro/ss/getport.lua $UDP_RELAY_SERVER > /tmp/userver_port.txt
 			udp_server_port=`cat /tmp/userver_port.txt`
+			rm /tmp/userver_port.txt
 			cat > /tmp/socks5-tproxy-uconfig.yml <<EOF
 socks5:
   port: $udp_server_port
   address: $udp_server
   udp: 'tcp'
+
+misc:
+  pid-file: /var/run/socks5-tproxy-u.pid
 
 udp:
   port: $udp_local_port
@@ -644,6 +654,7 @@ kill_process() {
 		log "关闭 socks5-tproxy 服务端进程..."
 		killall socks5-tproxy >/dev/null 2>&1
 		kill -9 "$socks5-tproxy_process" >/dev/null 2>&1
+		rm -f /tmp/socks5-tproxy-config.yml /tmp/socks5-tproxy-uconfig.yml /var/run/socks5-tproxy.pid /var/run/socks5-tproxy-u.pid
 	fi
 }
 
