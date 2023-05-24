@@ -2,7 +2,7 @@
 
 # If running interactively, then
 if [ "$PS1" ] ; then
-    export PS1='\h:\w \$ '
+    export PS1='\[\e]0;\u@\h: \w\a\]\u@\h:\w\$ '
     export PATH=/opt/sbin:/opt/bin:/usr/sbin:/usr/bin:/sbin:/bin
     export HOSTNAME=`/bin/hostname`
     export TERMINFO=/usr/share/terminfo
@@ -14,10 +14,12 @@ if [ "$PS1" ] ; then
 fi;
 
 [ -r /opt/etc/profile ] && . /opt/etc/profile
+[ -r /etc/storage/profile ] && . /etc/storage/profile
 
 alias df='df -Th'
 alias ps='ps ww'
 alias ls='ls -hF --color=auto'
+alias l='ls -AlhF --color=auto'
 alias ll='ls -AlhF --color=auto'
 alias htop='htop -t'
 alias clash=/etc/storage/clash/clash.sh
