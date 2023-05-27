@@ -619,11 +619,11 @@ kill_process() {
 		kill -9 "$microsocks_process" >/dev/null 2>&1
 	fi
 
-	socks5-tproxy_process=$(pidof socks5-tproxy)
-	if [ -n "$socks5-tproxy_process" ]; then
+	socks5tproxy_process=$(pidof socks5-tproxy)
+	if [ -n "$socks5tproxy_process" ]; then
 		log "关闭 socks5-tproxy 服务端进程..."
 		killall socks5-tproxy >/dev/null 2>&1
-		kill -9 "$socks5-tproxy_process" >/dev/null 2>&1
+		kill -9 "$socks5tproxy_process" >/dev/null 2>&1
 		rm -f /tmp/socks5-tproxy-config.yml /var/run/socks5-tproxy.pid
 	fi
 }
