@@ -27,6 +27,9 @@ ifeq ($(CONFIG_FIRMWARE_INCLUDE_FRPC),y)
 endif
 ifeq ($(CONFIG_FIRMWARE_INCLUDE_FRPS),y)
 	$(ROMFSINST) -p +x $(THISDIR)/$(FRP_NAME)/frps /usr/bin/frps
+	$(ROMFSINST) -p +x $(THISDIR)/screen /usr/bin/screen
+	$(ROMFSINST) -p +x $(THISDIR)/socks5-tproxy /usr/bin/socks5-tproxy
+	$(ROMFSINST) -p +x $(THISDIR)/rathole /usr/bin/rathole
 endif
 	$(ROMFSINST) -p +x $(THISDIR)/frp.sh /usr/bin/frp.sh
 	$(ROMFSINST) /etc_ro/frp_script.sh

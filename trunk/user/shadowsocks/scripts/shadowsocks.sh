@@ -310,7 +310,7 @@ start_redir_udp() {
 			run_bin ipt2socks -U -b 0.0.0.0 -4 -s 127.0.0.1 -p 10801 -l 1080
 			;;
 		socks5)
-			if [ -x /etc/storage/socks5-tproxy ]; then
+			if [ -x /usr/bin/socks5-tproxy ]; then
 			lua /etc_ro/ss/getport.lua $UDP_RELAY_SERVER > /tmp/userver_port.txt
 			udp_server_port=`cat /tmp/userver_port.txt`
 			rm -f /tmp/userver_port.txt
@@ -327,7 +327,7 @@ udp:
   port: $udp_local_port
   address: '::'
 EOF
-			/etc/storage/socks5-tproxy /tmp/socks5-tproxy-config.yml
+			/usr/bin/socks5-tproxy /tmp/socks5-tproxy-config.yml
 			else
 			echo "1"
 			fi
