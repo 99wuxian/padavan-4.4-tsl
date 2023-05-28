@@ -214,7 +214,7 @@ start_rules() {
 	if [ $dports = "0" ]; then
 		proxyport=" "
 	else
-		proxyport="-m multiport --dports 22,53,587,465,995,993,143,80,443"
+		proxyport="-m multiport --dports 22,53,587,465,995,993,143,80,443,8080,23,25,110"
 	fi
 	/usr/bin/ss-rules \
 		-s "$server" \
