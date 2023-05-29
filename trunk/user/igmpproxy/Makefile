@@ -1,18 +1,7 @@
-SRC_NAME = igmpproxy-0.2
-SRC_URL = https://github.com/pali/igmpproxy/releases/download/0.2/igmpproxy-0.2.tar.gz
+SRC_NAME="igmpproxy-0.1"
 
-all: download_test extract_test config_test
+all: config_test
 	$(MAKE) -j$(HOST_NCPU) -C $(SRC_NAME)
-
-download_test:
-	( if [ ! -f $(SRC_NAME).tar.gz ]; then \
-		wget -t5 --timeout=20 --no-check-certificate -O $(SRC_NAME).tar.gz $(SRC_URL); \
-	fi )
-
-extract_test:
-	( if [ ! -d $(SRC_NAME) ]; then \
-		tar -xf $(SRC_NAME).tar.gz; \
-	fi )
 
 config_test:
 	( if [ -f ./config_done ]; then \
@@ -23,7 +12,6 @@ config_test:
 
 configure:
 	( cd $(SRC_NAME) ; \
-	aclocal; autoconf; autoheader; automake --add-missing ; \
 	./configure \
 		--prefix=/ \
 		--host=$(HOST_TARGET) \
