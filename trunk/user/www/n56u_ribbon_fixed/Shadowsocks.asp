@@ -2500,18 +2500,11 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 																value="<% nvram_get_x("", "ss_turn_ss"); %>">
 														</td>
 													</tr>
-													<!--
-<tr> <th width="50%">自定义国内IP更新地址:</th>
-	<td>
-		<input type="text" class="input" size="15" name="ss_chnroute_url" style="width: 200px"  value="<% nvram_get_x("","ss_chnroute_url"); %>" />
-	</td>
-</tr>
-<tr> <th width="50%">广告过滤地址:</th>
-	<td>
-		<input type="text" class="input" size="15" name="ss_adblock_url" style="width: 200px"  value="<% nvram_get_x("","ss_adblock_url"); %>" />
-	</td>
-</tr>-->
-
+													<tr> <th width="50%">广告过滤地址:</th>
+														<td>
+															<input type="text" class="input" size="15" name="ss_adblock_url" style="width: 200px"  value="<% nvram_get_x("","ss_adblock_url"); %>" />
+														</td>
+													</tr>
 													<tr>
 														<th colspan="2" style="background-color: #E3E3E3;">SOCKS5代理</th>
 													</tr>

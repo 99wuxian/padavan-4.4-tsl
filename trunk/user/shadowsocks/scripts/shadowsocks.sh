@@ -381,22 +381,21 @@ EOF
 }
 
 start_AD() {
-	mkdir -p /tmp/dnsmasq.dom
-	curl -s -o /tmp/adnew.conf --connect-timeout 10 --retry 3 $(nvram get ss_adblock_url)
-	if [ ! -f "/tmp/adnew.conf" ]; then
-		log "AD文件下载失败，可能是地址失效或者网络异常！"
-	else
-		log "AD文件下载成功"
-		if [ -f "/tmp/adnew.conf" ]; then
-			check = `grep -wq "address=" /tmp/adnew.conf`
-	  		if [ ! -n "$check" ] ; then
-	    		cp /tmp/adnew.conf /tmp/dnsmasq.dom/ad.conf
-	  		else
-			    cat /tmp/adnew.conf | grep ^\|\|[^\*]*\^$ | sed -e 's:||:address\=\/:' -e 's:\^:/0\.0\.0\.0:' > /tmp/dnsmasq.dom/ad.conf
+	if [ ! -f "/tmp/dnsmasq.dom/ad.conf" ] ; then
+		mkdir -p /tmp/dnsmasq.dom
+		curl -s -o /tmp/adnew.conf --connect-timeout 10 --retry 3 "$(nvram get ss_adblock_url)"
+		if [ ! -f "/tmp/adnew.conf" ]; then
+			log "AD文件下载失败，可能是地址失效或者网络异常！"
+		else
+			log "AD文件下载成功"
+			if grep -wq "address=" /tmp/adnew.conf ; then
+				mv /tmp/adnew.conf /tmp/dnsmasq.dom/ad.conf
+			else
+				grep ^\|\|[^\*]*\^$ /tmp/adnew.conf | sed -e 's:||:address\=\/:' -e 's:\^:/0\.0\.0\.0:' > /tmp/dnsmasq.dom/ad.conf
+				rm -f /tmp/adnew.conf
 			fi
 		fi
 	fi
-	rm -f /tmp/adnew.conf
 }
 
 # ================================= 启动 Socks5代理 ===============================
@@ -492,7 +491,7 @@ ssp_start() {
 		cgroups_init
 		if start_redir_tcp; then
 			start_redir_udp
-			#start_AD
+			start_AD
 			start_dns
 		fi
 	fi
