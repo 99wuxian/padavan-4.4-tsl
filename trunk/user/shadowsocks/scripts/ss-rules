@@ -128,12 +128,8 @@ EOF
 	$ipt_n -I PREROUTING $SSNU -m comment --comment "$TAG" -j SS_SPEC_WAN_AC
 	ipset -N whitelist hash:net 2>/dev/null
 	ipset -N blacklist hash:net 2>/dev/null
-	cat /etc/storage/ss_dom.sh | grep -v '^!' | grep -v "^$" > /tmp/ss_dom.txt
-	awk '{printf("ipset=/%s/blacklist\n", $1, $1 )}' /tmp/ss_dom.txt > /tmp/dnsmasq.dom/ss_dom.conf
-	cat /etc/storage/uss_dom.sh | grep -v '^!' | grep -v "^$" > /tmp/uss_dom.txt
-	awk '{printf("ipset=/%s/whitelist\n", $1, $1 )}' /tmp/uss_dom.txt > /tmp/dnsmasq.dom/uss_dom.conf
-    rm -f /tmp/ss_dom.txt
-	rm -f /tmp/uss_dom.txt
+	cat /etc/storage/ss_dom.sh | grep -v '^!' | grep -v "^$" | awk '{printf("server=/%s/127.0.0.1#5353\nipset=/%s/blacklist\n", $1, $1 )}' > /tmp/dnsmasq.dom/ss_dom.conf
+	cat /etc/storage/uss_dom.sh | grep -v '^!' | grep -v "^$" | awk '{printf("ipset=/%s/whitelist\n", $1 )}' > /tmp/dnsmasq.dom/uss_dom.conf
 	$ipt_n -I SS_SPEC_WAN_AC 2 -m set --match-set blacklist dst -j SS_SPEC_WAN_FW
 	$ipt_n -I SS_SPEC_WAN_AC 2 -m set --match-set whitelist dst -j RETURN
 
