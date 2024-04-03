@@ -34,6 +34,9 @@ ss_turn=`nvram get ss_turn`
 lan_con=`nvram get lan_con`
 GLOBAL_SERVER=`nvram get global_server`
 socks=""
+SS_RULES=/usr/bin/ss-rules
+
+[ -x /etc/storage/ss-rules ] && SS_RULES=/etc/storage/ss-rules
 
 log() {
 	logger -t "$NAME" "$@"
@@ -216,7 +219,7 @@ start_rules() {
 	else
 		proxyport="-m multiport --dports 22,53,587,465,995,993,143,80,443,8080,23,25,110"
 	fi
-	/usr/bin/ss-rules \
+	$SS_RULES \
 		-s "$server" \
 		-l "$local_port" \
 		-S "$udp_server" \
@@ -512,7 +515,7 @@ ssp_start() {
 
 ssp_close() {
 	rm -rf /tmp/cdn
-	/usr/bin/ss-rules -f
+	$SS_RULES -f
 	kill -9 $(ps | grep ssr-switch | grep -v grep | awk '{print $1}') >/dev/null 2>&1
 	kill -9 $(ps | grep ssr-monitor | grep -v grep | awk '{print $1}') >/dev/null 2>&1
 	kill_process

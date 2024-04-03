@@ -209,7 +209,7 @@ tp_rule() {
 	$ipt_n -I SS_SPEC_WAN_AC 1 -d $server -j RETURN
 	fi
 
-	#$ipt -A SS_SPEC_TPROXY -p udp $PROXY_PORTS $lanbip \
+	#$ipt -A SS_SPEC_TPROXY -p udp $UDP_PROXY_PORTS $lanbip \
 		#-j TPROXY --on-port "$LOCAL_PORT" --tproxy-mark 100
 
 	if [ "$RUNMODE" = "router" ] ;then
@@ -217,7 +217,7 @@ tp_rule() {
 	$ipt_m -A SS_SPEC_TPROXY -p udp -m set --match-set china dst -j RETURN
 	$ipt_m -A SS_SPEC_TPROXY -p udp -m set --match-set gmlan src -m set ! --match-set china dst -j TPROXY \
 	--on-port "$LOCAL_PORT" --tproxy-mark 0x01/0x01
-	$ipt_m -A SS_SPEC_TPROXY -p udp $PROXY_PORTS -m set ! --match-set ss_spec_wan_ac dst -j TPROXY \
+	$ipt_m -A SS_SPEC_TPROXY -p udp $UDP_PROXY_PORTS -m set ! --match-set ss_spec_wan_ac dst -j TPROXY \
 	--on-port "$LOCAL_PORT" --tproxy-mark 0x01/0x01
 	$ipt_m -I SS_SPEC_TPROXY -p udp --dport 5353 -j RETURN
 
@@ -230,18 +230,18 @@ tp_rule() {
 	$ipt_m -I SS_SPEC_TPROXY -p udp --dport 5353 -j RETURN
 
 	elif [ "$RUNMODE" = "oversea" ] ;then
-	$ipt_m -A SS_SPEC_TPROXY -p udp $PROXY_PORTS -m set --match-set oversea dst \
+	$ipt_m -A SS_SPEC_TPROXY -p udp $UDP_PROXY_PORTS -m set --match-set oversea dst \
 	-j TPROXY --on-port "$LOCAL_PORT" --tproxy-mark 0x01/0x01
 	$ipt_m -A SS_SPEC_TPROXY -p udp -m set --match-set gmlan src -m set \
 	-j TPROXY --on-port "$LOCAL_PORT" --tproxy-mark 0x01/0x01
-	$ipt_m -A SS_SPEC_TPROXY -p udp $PROXY_PORTS -m set --match-set china dst \
+	$ipt_m -A SS_SPEC_TPROXY -p udp $UDP_PROXY_PORTS -m set --match-set china dst \
 	-j TPROXY --on-port "$LOCAL_PORT" --tproxy-mark 0x01/0x01
 
 	elif [ "$RUNMODE" = "all" ] ;then
-	$ipt_m -A SS_SPEC_TPROXY -p udp $PROXY_PORTS -j TPROXY --on-port "$LOCAL_PORT" --tproxy-mark 0x01/0x01
+	$ipt_m -A SS_SPEC_TPROXY -p udp $UDP_PROXY_PORTS -j TPROXY --on-port "$LOCAL_PORT" --tproxy-mark 0x01/0x01
 	fi
 	$ipt_m -A PREROUTING -p udp -m comment --comment "$TAG" -j SS_SPEC_TPROXY
-    $ipt_m -I SS_SPEC_TPROXY -p udp $PROXY_PORTS -m set --match-set blacklist dst \
+    $ipt_m -I SS_SPEC_TPROXY -p udp $UDP_PROXY_PORTS -m set --match-set blacklist dst \
     -j TPROXY --on-port "$LOCAL_PORT" --tproxy-mark 0x01/0x01
 	$ipt_m -I SS_SPEC_TPROXY -p udp -m set --match-set whitelist dst -j RETURN
 
