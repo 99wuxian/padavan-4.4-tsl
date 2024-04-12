@@ -1,7 +1,7 @@
-SRC_NAME = ZeroTierOne-1.8.5
+SRC_NAME = ZeroTierOne-1.8.10
 THISDIR = $(shell pwd)
 FLAGS := DEFS=""
-CFLAGS := -Os -ffunction-sections -fdata-sections -fPIC
+CFLAGS := -Os -ffunction-sections -fdata-sections
 LDFLAGS := -Wl,--gc-sections,--as-needed
 
 all: extract_test
