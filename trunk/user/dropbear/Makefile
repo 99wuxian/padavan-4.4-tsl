@@ -1,4 +1,4 @@
-SRC_NAME=dropbear-2022.83
+SRC_NAME=dropbear-2024.84
 SRC_URL=https://matt.ucc.asn.au/dropbear/$(SRC_NAME).tar.bz2
 
 ifeq ($(CONFIG_FIRMWARE_INCLUDE_SFTP),y)
@@ -23,7 +23,7 @@ download_test:
 extract_test:
 	( if [ ! -d $(SRC_NAME) ]; then \
 		tar xjf $(SRC_NAME).tar.bz2; \
-		patch -d $(SRC_NAME) -p1 -i ../100-update-default-host-keys-path.patch; \
+		patch -d $(SRC_NAME)/src -p1 -i ../../100-update-default-host-keys-path.patch; \
 	fi )
 
 config_test:
@@ -70,3 +70,4 @@ romfs:
 	$(ROMFSINST) -s dropbearmulti /usr/bin/dropbearkey
 	$(ROMFSINST) -s dropbearmulti /usr/bin/dropbearconvert
 	$(ROMFSINST) -s /usr/bin/dropbearmulti /usr/sbin/dropbear
+
