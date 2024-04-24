@@ -4,6 +4,7 @@
 # Copyright (C) 2017 yushi studio <ywb94@qq.com>
 # Copyright (C) 2018 lean <coolsnowwolf@gmail.com>
 # Copyright (C) 2019 chongshengB <bkye@vip.qq.com>
+# Copyright (C) 2023 simonchen
 #
 # This is free software, licensed under the GNU General Public License v3.
 # See /LICENSE for more information.
@@ -95,7 +96,7 @@ cgroups_cleanup() {
 }
 
 gen_config_file() {
-	fastopen="false"
+	#fastopen="false"
 	case "$2" in
 	0) config_file=$CONFIG_FILE && local stype=$(nvram get d_type) ;;
 	1) config_file=$CONFIG_UDP_FILE && local stype=$(nvram get ud_type) ;;
@@ -215,9 +216,9 @@ start_rules() {
 	cat /etc/storage/ss_lan_gmip.sh | grep -v '^!' | grep -v "^$" >$lan_gm_ips
 	dports=$(nvram get s_dports)
 	if [ $dports = "0" ]; then
-		proxyport=" "
+		proxyport="--syn"
 	else
-		proxyport="-m multiport --dports 22,53,587,465,995,993,143,80,443,8080,23,25,110"
+		proxyport="-m multiport --dports 22,53,587,465,995,993,143,80,443,8080,23,25,110,3389 --syn"
 	fi
 	$SS_RULES \
 		-s "$server" \
@@ -351,6 +352,7 @@ start_dns() {
 		dnsstr="$(nvram get tunnel_forward)"
 		dnsserver=$(echo "$dnsstr" | awk -F '#' '{print $1}')
 		#dnsport=$(echo "$dnsstr" | awk -F '#' '{print $2}')
+		ipset add gfwlist $dnsserver 2>/dev/null
 		log "启动 dns2tcp：5353 端口..."
 		dns2tcp -L"127.0.0.1#5353" -R"$dnsstr" >/dev/null 2>&1 &
 		pdnsd_enable_flag=0
