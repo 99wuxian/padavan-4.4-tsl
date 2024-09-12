@@ -1,5 +1,5 @@
-SRC_NAME=libusb-1.0.23
-SRC_URL=https://github.com/libusb/libusb/releases/download/v1.0.23/libusb-1.0.23.tar.bz2
+SRC_NAME=libusb-1.0.27
+SRC_URL=https://github.com/libusb/libusb/releases/download/v1.0.27/$(SRC_NAME).tar.bz2
 
 all: download_test extract_test config_test
 	$(MAKE) -j$(HOST_NCPU) -C $(SRC_NAME)
@@ -12,6 +12,7 @@ download_test:
 extract_test:
 	( if [ ! -d $(SRC_NAME) ]; then \
 		tar jxf $(SRC_NAME).tar.bz2; \
+		patch -d $(SRC_NAME) -p1 -i ../specifig.patch; \
 	fi )
 
 config_test:
