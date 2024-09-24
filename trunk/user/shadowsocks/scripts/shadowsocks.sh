@@ -388,7 +388,7 @@ EOF
 start_AD() {
 	if [ ! -f "/tmp/dnsmasq.dom/ad.conf" ] ; then
 		mkdir -p /tmp/dnsmasq.dom
-		curl -s -o /tmp/adnew.conf --connect-timeout 10 --retry 3 "$(nvram get ss_adblock_url)"
+		curl -s -o /tmp/adnew.conf --connect-timeout 10 --retry 5 --retry-all-errors --retry-connrefused "$(nvram get ss_adblock_url)"
 		if [ ! -f "/tmp/adnew.conf" ]; then
 			log "AD文件下载失败，可能是地址失效或者网络异常！"
 		else
