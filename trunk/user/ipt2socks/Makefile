@@ -1,5 +1,5 @@
-SRC_NAME = ipt2socks-1.1.3
-SRC_URL = https://github.com/zfl9/ipt2socks/archive/refs/tags/v1.1.3.tar.gz
+SRC_NAME = ipt2socks-1.1.4
+SRC_URL = https://github.com/zfl9/ipt2socks/archive/refs/tags/v1.1.4.tar.gz
 THISDIR = $(shell pwd)
 
 all: download_test extract_test
